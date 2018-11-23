@@ -99,6 +99,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         weatherDataModel.city = json["name"].stringValue
         weatherDataModel.condition = json["weather"][0]["id"].intValue
         weatherDataModel.weatherIconName = weatherDataModel.updateWeatherIcon(condition: weatherDataModel.condition)
+        
+        updateUIWithWeatherData()
     }
 
     
@@ -109,7 +111,11 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     
     //Write the updateUIWithWeatherData method here:
-    
+    func updateUIWithWeatherData() {
+        temperatureLabel.text = String(weatherDataModel.temperature)
+        cityLabel.text = weatherDataModel.city
+        weatherIcon.image = UIImage(named: weatherDataModel.weatherIconName)
+    }
     
     
     
