@@ -22,6 +22,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     //TODO: Declare instance variables here
     // CoreLocationで提供されているCLLocationManager関数を定数にセット
     let locationManager = CLLocationManager()
+    let weatherDataModel = WeatherDataModel()
 
     
     //Pre-linked IBOutlets
@@ -87,10 +88,18 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     //Write the updateWeatherData method here:
     func updateWeatherData(json: JSON) {
-        let tempResult = json["main"]["temp"].stringValue
-        print(String(describing: type(of: tempResult)))
-        print(tempResult)
         
+        guard let tempResult = json["main"]["temp"].double else {
+            cityLabel.text = "Weather Unavailable"
+            return
+        }
+        let cityResult = json["name"].stringValue
+        let conditionResult = json["weather"][0]["id"].intValue
+        
+        weatherDataModel.temperature = Int(tempResult - 273.15)
+        weatherDataModel.city = cityResult
+        weatherDataModel.condition = conditionResult
+        weatherDataModel.weatherIconName = weatherDataModel.updateWeatherIcon(condition: weatherDataModel.condition)
     }
 
     
