@@ -8,6 +8,8 @@
 
 import UIKit
 import CoreLocation
+import Alamofire
+import SwiftyJSON
 
 class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
@@ -51,7 +53,9 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     /***************************************************************/
     
     //Write the getWeatherData method here:
-    
+    func getWeatherData(url: String, parameters: [String : String]){
+        
+    }
 
     
     
@@ -99,6 +103,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
             
             // Dictionary型を定義して、緯度・経度・APIKeyをセット
             let params: [String : String] = ["lat" : latitude, "lon" : longitude, "appid" : APP_ID]
+            
+            getWeatherData(url: WEATHER_URL, parameters: params)
         }
     }
     
