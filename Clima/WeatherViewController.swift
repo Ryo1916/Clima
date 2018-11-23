@@ -53,8 +53,27 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     /***************************************************************/
     
     //Write the getWeatherData method here:
-    func getWeatherData(url: String, parameters: [String : String]){
-        
+    func getWeatherData(url: String, parameters: [String : String]) {
+        // バックグラウンドで非同期処理する。response inは非同期処理の記法？
+        // response in はクロージャ
+        Alamofire.request(url, method: .get, parameters: parameters).responseJSON {
+            response in
+            if response.result.isSuccess {
+                print("Success! Got the weather data")
+                
+                // response.result.valueはオプショナル型だが、if文で結果を確認しているのでforce unwrappedしてよい
+                let weatherJSON: JSON = JSON(response.result.value!)
+                // 以下の記法だとなぜダメか調べる(Any型からJSON型へのダウンキャスト)
+                //let weatherJSON: JSON = response.result.value! as! JSON
+                
+                // クロージャの中でメソッドを呼び出すにはself句を呼び出すメソッドの前につける必要あり
+                self.updateWeatherData(json: weatherJSON)
+                
+            } else {
+                print("Error \(String(describing: response.result.error))")
+                self.cityLabel.text = "Connection Issues"
+            }
+        }
     }
 
     
@@ -67,7 +86,12 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
    
     
     //Write the updateWeatherData method here:
-    
+    func updateWeatherData(json: JSON) {
+        let tempResult = json["main"]["temp"].stringValue
+        print(String(describing: type(of: tempResult)))
+        print(tempResult)
+        
+    }
 
     
     
@@ -95,6 +119,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         // もし負になると位置情報の取得に失敗しているので、位置情報取得を停止して電池消耗を抑える
         if location.horizontalAccuracy > 0 {
             locationManager.stopUpdatingLocation()
+            locationManager.delegate = nil
+            
             print("longitude = \(location.coordinate.longitude), latitude = \(location.coordinate.latitude)")
             
             // 緯度・経度を文字列に変換してセット
