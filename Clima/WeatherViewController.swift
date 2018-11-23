@@ -7,18 +7,18 @@
 //
 
 import UIKit
+import CoreLocation
 
-
-class WeatherViewController: UIViewController {
+class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     //Constants
     let WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
-    let APP_ID = "e72ca729af228beabd5d20e3b7749713"
+    let APP_ID = "3486f122e589efd3e860f3a10775ce47"
     /***Get your own App ID at https://openweathermap.org/appid ****/
     
 
     //TODO: Declare instance variables here
-    
+    let locationManager = CLLocationManager()
 
     
     //Pre-linked IBOutlets
@@ -32,7 +32,12 @@ class WeatherViewController: UIViewController {
         
         
         //TODO:Set up the location manager here.
-    
+        // WeatherViewController(self)がCLLocationManagerの処理を代理でやりますよ、という意味
+        locationManager.delegate = self
+        // 天気予報なので、位置情報の正確さは大体数100m程度の精度で問題ない
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        // ユーザに毎回位置情報を利用していいか聞く
+        locationManager.requestAlwaysAuthorization()
         
         
     }
