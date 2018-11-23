@@ -39,6 +39,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         // ユーザに毎回位置情報を利用していいか聞く
         locationManager.requestAlwaysAuthorization()
+        // バックグラウンドで位置情報取得を開始する
+        locationManager.startUpdatingLocation()
         
         
     }
@@ -82,11 +84,31 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     
     //Write the didUpdateLocations method here:
-    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // CLLocationの配列に収められている位置情報のうち、最新のものが最も精度が良いので、それのみを取得
+        let location = locations[locations.count - 1]
+        // 位置情報はlatitudeとlongitudeのunsigned floatでradiusな情報として与えられるが、
+        // もし負になると位置情報の取得に失敗しているので、位置情報取得を停止して電池消耗を抑える
+        if location.horizontalAccuracy > 0 {
+            locationManager.stopUpdatingLocation()
+            print("longitude = \(location.coordinate.longitude), latitude = \(location.coordinate.latitude)")
+            
+            // 緯度・経度を文字列に変換してセット
+            let latitude = String(location.coordinate.latitude)
+            let longitude = String(location.coordinate.longitude)
+            
+            // Dictionary型を定義して、緯度・経度・APIKeyをセット
+            let params: [String : String] = ["lat" : latitude, "lon" : longitude, "appid" : APP_ID]
+        }
+    }
     
     
     //Write the didFailWithError method here:
-    
+    // トンネルやAirplaneモードなど利用不可の時のためのメソッド
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
+        cityLabel.text = "Location Unavailable"
+    }
     
     
 
