@@ -18,6 +18,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
 
     //TODO: Declare instance variables here
+    // CoreLocationで提供されているCLLocationManager関数を定数にセット
     let locationManager = CLLocationManager()
 
     
@@ -32,7 +33,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         
         
         //TODO:Set up the location manager here.
-        // WeatherViewController(self)がCLLocationManagerの処理を代理でやりますよ、という意味
+        // WeatherViewController(self)がCLLocationManagerDelegateの処理を代理でやりますよ、という意味
         locationManager.delegate = self
         // 天気予報なので、位置情報の正確さは大体数100m程度の精度で問題ない
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
