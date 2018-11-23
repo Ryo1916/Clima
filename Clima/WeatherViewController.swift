@@ -89,16 +89,15 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     //Write the updateWeatherData method here:
     func updateWeatherData(json: JSON) {
         
+        // 気温が取得できなかった時のためのnilガード
         guard let tempResult = json["main"]["temp"].double else {
             cityLabel.text = "Weather Unavailable"
             return
         }
-        let cityResult = json["name"].stringValue
-        let conditionResult = json["weather"][0]["id"].intValue
-        
         weatherDataModel.temperature = Int(tempResult - 273.15)
-        weatherDataModel.city = cityResult
-        weatherDataModel.condition = conditionResult
+        // tempResultは画面出力のために整数にするが、それ以外は変換等不要なので直接weatherDataModelのプロパティに代入
+        weatherDataModel.city = json["name"].stringValue
+        weatherDataModel.condition = json["weather"][0]["id"].intValue
         weatherDataModel.weatherIconName = weatherDataModel.updateWeatherIcon(condition: weatherDataModel.condition)
     }
 
