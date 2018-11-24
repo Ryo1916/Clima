@@ -11,7 +11,7 @@ import CoreLocation
 import Alamofire
 import SwiftyJSON
 
-class WeatherViewController: UIViewController, CLLocationManagerDelegate {
+class WeatherViewController: UIViewController, CLLocationManagerDelegate, ChangeCityDelegate {
     
     //Constants
     let WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
@@ -66,6 +66,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
                 let weatherJSON: JSON = JSON(response.result.value!)
                 // 以下の記法だとなぜダメか調べる(Any型からJSON型へのダウンキャスト)
                 //let weatherJSON: JSON = response.result.value! as! JSON
+                print(weatherJSON)
                 
                 // クロージャの中でメソッドを呼び出すにはself句を呼び出すメソッドの前につける必要あり
                 self.updateWeatherData(json: weatherJSON)
@@ -112,7 +113,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     //Write the updateUIWithWeatherData method here:
     func updateUIWithWeatherData() {
-        temperatureLabel.text = String(weatherDataModel.temperature)
+        temperatureLabel.text = String("\(weatherDataModel.temperature)°")
         cityLabel.text = weatherDataModel.city
         weatherIcon.image = UIImage(named: weatherDataModel.weatherIconName)
     }
@@ -164,11 +165,22 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     
     //Write the userEnteredANewCityName Delegate method here:
-    
+    // ChangeCityDelegateを継承しただけだと、protocol内に宣言されている以下メソッドを利用していないため、Xcodeがエラーを出す
+    func userEnteredANewCityName(city: String) {
+        let params: [String : String] = ["q" : city, "appid" : APP_ID]
+        getWeatherData(url: WEATHER_URL, parameters: params)
+    }
 
     
     //Write the PrepareForSegue Method here
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "changeCityName" {
+            // ダウンキャスティングでsegue.destinationをChangeCityViewControllerに変換
+            let destinationVC = segue.destination as! ChangeCityViewController
+            // 自身(WeatherViewController)をChangeCityViewControllerのデリゲートとする
+            destinationVC.delegate = self
+        }
+    }
     
     
     
