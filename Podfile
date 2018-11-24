@@ -10,5 +10,11 @@ target 'Clima' do
     pod 'SwiftyJSON', '4.2.0'
     pod 'Alamofire', '4.7.3'
     pod 'SVProgressHUD', '2.2.5'
+    
+    plugin 'cocoapods-keys', {
+        :project => "Clima",
+        :keys => [
+        "OpenWeatherMapAPIKey"
+        ]}
 
 end

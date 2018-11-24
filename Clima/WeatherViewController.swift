@@ -10,12 +10,13 @@ import UIKit
 import CoreLocation
 import Alamofire
 import SwiftyJSON
+import Keys
 
 class WeatherViewController: UIViewController, CLLocationManagerDelegate, ChangeCityDelegate {
     
     //Constants
     let WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
-    let APP_ID = "3486f122e589efd3e860f3a10775ce47"
+    let APP_ID = ClimaKeys().openWeatherMapAPIKey
     /***Get your own App ID at https://openweathermap.org/appid ****/
     
 
