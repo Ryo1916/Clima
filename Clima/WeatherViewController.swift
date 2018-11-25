@@ -17,6 +17,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     //Constants
     let WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
     let APP_ID = ClimaKeys().openWeatherMapAPIKey
+    let kelvinToCelsius = 273.15
     /***Get your own App ID at https://openweathermap.org/appid ****/
     
 
@@ -96,7 +97,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
             cityLabel.text = "Weather Unavailable"
             return
         }
-        weatherDataModel.temperature = Int(tempResult - 273.15)
+        weatherDataModel.temperature = Int(tempResult - kelvinToCelsius)
         // tempResultは画面出力のために整数にするが、それ以外は変換等不要なので直接weatherDataModelのプロパティに代入
         weatherDataModel.city = json["name"].stringValue
         weatherDataModel.condition = json["weather"][0]["id"].intValue
@@ -120,6 +121,15 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     }
     
     
+    @IBAction func switchTemperature(_ sender: UISwitch) {
+        if sender.isOn {
+            temperatureLabel.text = String("\(weatherDataModel.temperature + 32)℉")
+            sender.isOn = false
+        } else {
+            temperatureLabel.text = String("\(weatherDataModel.temperature)°")
+            sender.isOn = true
+        }
+    }
     
     
     
